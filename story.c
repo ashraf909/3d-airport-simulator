@@ -55,7 +55,7 @@ static int isStation(int step){ return step>=ST_CHECKIN && step<=ST_BOARD; }
 
 void Story_Init(void)
 { g_story.active=1; g_story.step=ST_INTRO; g_story.sub=-1; g_story.t=0; g_story.flash=0;
-  g_story.doneFlash=0; g_story.doneMsg=NULL; g_story.doneSound=0; }
+  g_story.flashMsg=NULL; g_story.doneFlash=0; g_story.doneMsg=NULL; g_story.doneSound=0; }
 
 void Story_Restart(void)
 {
@@ -139,7 +139,7 @@ void Story_Interact(void)   /* E or Enter */
     if(!g_story.active) return;
     if(g_story.step==ST_INTRO){ g_story.step=ST_CHECKIN; g_story.sub=-1; return; }
     if(!isStation(g_story.step)) return;
-    if(!inRange()){ g_story.flash=2.0f; return; }     /* must be at the station */
+    if(!inRange()){ g_story.flash=2.0f; g_story.flashMsg="Walk to the glowing marker first."; return; }
     if(g_story.sub<0){ g_story.sub=0; return; }        /* start talking */
     {
         int len; const Dline *d=dlg(g_story.step,&len);
@@ -162,7 +162,25 @@ void Story_No(void)
     int len; const Dline *d;
     if(!g_story.active || !isStation(g_story.step) || !inRange() || g_story.sub<0) return;
     d=dlg(g_story.step,&len);
-    if(d && d[g_story.sub].yn) g_story.flash=2.5f;
+    if(!d || !d[g_story.sub].yn) return;
+
+    /* baggage is optional: "No" means no checked bag -> skip straight to security */
+    if(g_story.step==ST_BAGGAGE){
+        g_story.doneMsg="NO CHECKED BAG - SKIPPED";
+        g_story.doneFlash=2.4f; g_story.doneSound=1;
+        g_story.step=ST_SECURITY; g_story.sub=-1;
+        return;
+    }
+
+    /* every other step needs "Yes" - show a clear reason instead of a vague hint */
+    g_story.flash=2.5f;
+    switch(g_story.step){
+        case ST_CHECKIN:  g_story.flashMsg="You need your passport to fly. Press Y."; break;
+        case ST_SECURITY: g_story.flashMsg="You must be screened to pass. Press Y."; break;
+        case ST_GATE:     g_story.flashMsg="Show your boarding pass. Press Y.";       break;
+        case ST_BOARD:    g_story.flashMsg="Please board the flight. Press Y.";       break;
+        default:          g_story.flashMsg="Press Y to continue.";                    break;
+    }
 }
 
 /* HUD queries */
@@ -182,7 +200,7 @@ const char *Story_Objective(void)
     return NULL;
 }
 const char *Story_Flash(void)
-{ return (g_story.flash>0)? "Walk up to the counter and press E." : NULL; }
+{ return (g_story.flash>0)? (g_story.flashMsg? g_story.flashMsg : "Walk to the glowing marker first.") : NULL; }
 
 /* in-world panel */
 int Story_PanelState(void)
@@ -209,6 +227,9 @@ const char *Story_PanelPrompt(void)
     int len; const Dline *d;
     if(g_story.sub<0) return "[E] Talk to the agent";
     d=dlg(g_story.step,&len);
-    if(d && d[g_story.sub].yn) return "[Y] Yes    [N] No";
+    if(d && d[g_story.sub].yn){
+        if(g_story.step==ST_BAGGAGE) return "[Y] Yes    [N] No bag (skip)";
+        return "[Y] Yes    [N] No";
+    }
     return "[E] Continue";
 }

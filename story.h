@@ -14,6 +14,7 @@ typedef struct {
     int   sub;       /* -1 = not talking yet (need to press E); >=0 = line index */
     float t;         /* cut-scene timer */
     float flash;     /* nudge message seconds */
+    const char *flashMsg; /* what the nudge says */
     float doneFlash;      /* "task complete" banner timer */
     const char *doneMsg;  /* text for the banner */
     int   doneSound;      /* set to 1 to request a chime (main plays + clears) */
