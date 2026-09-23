@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+ <FileVersion major="1" minor="6" />
+ <Project>
+  <Option title="3D Airport Simulator" />
+  <Option compiler="gcc" />
+  <Build>
+   <Target title="Debug">
+    <Option output="airport_simulator.exe" prefix_auto="0" extension_auto="0" />
+    <Option object_output="obj/Debug/" />
+    <Option type="1" />
+    <Option compiler="gcc" />
+    <Compiler><Add option="-g" /></Compiler>
+   </Target>
+   <Target title="Release">
+    <Option output="airport_simulator.exe" prefix_auto="0" extension_auto="0" />
+    <Option object_output="obj/Release/" />
+    <Option type="1" />
+    <Option compiler="gcc" />
+    <Compiler><Add option="-O2" /></Compiler>
+   </Target>
+  </Build>
+  <Compiler>
+   <Add option="-Wall" />
+   <Add option="-Wextra" />
+   <Add option="-std=c99" />
+  </Compiler>
+  <Linker>
+   <Add library="freeglut" />
+   <Add library="opengl32" />
+   <Add library="glu32" />
+   <Add library="winmm" />
+   <Add library="gdi32" />
+  </Linker>
+  <Unit filename="main.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="camera.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="camera.h" />
+  <Unit filename="gfx.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="gfx.h" />
+  <Unit filename="scene.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="scene.h" />
+  <Unit filename="aircraft.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="aircraft.h" />
+  <Unit filename="vehicles.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="vehicles.h" />
+  <Unit filename="people.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="people.h" />
+  <Unit filename="story.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="story.h" />
+  <Unit filename="hud.c"><Option compilerVar="CC" /></Unit>
+  <Unit filename="hud.h" />
+  <Unit filename="layout.h" />
+  <Unit filename="README.md" />
+  <Extensions><code_completion /><debugger /></Extensions>
+ </Project>
+</CodeBlocks_project_file>
